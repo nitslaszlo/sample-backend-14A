@@ -1,16 +1,15 @@
 import express, { Request, Response, NextFunction } from "express";
 import IController from "./interfaces/controller.interface";
+import { config } from "dotenv";
+import mongoose from "mongoose";
 
 export default class App {
   public app: express.Application;
-  public port: number;
 
-  constructor(controllers: IController[], port: number) {
+  constructor(controllers: IController[]) {
+    config();
     this.app = express();
-    this.port = port;
-
-    this.initializeMiddlewares();
-    this.initializeControllers(controllers);
+    this.connectToDatabase(controllers);
   }
 
   private loggerMiddleware(
@@ -33,9 +32,20 @@ export default class App {
     });
   }
 
-  public listen() {
-    this.app.listen(this.port, () => {
-      console.log(`App listening on the port ${this.port}`);
+  public connectToDatabase(controllers: IController[]) {
+    const { MONGO_URI, MONGO_DB, PORT } = process.env;
+    mongoose.connect(MONGO_URI as string, { dbName: MONGO_DB});
+
+    mongoose.connection.on("connected", () => {
+      console.log("Connected to MongoDB server.");
+      this.initializeMiddlewares();
+      this.initializeControllers(controllers);
+      this.app.listen(PORT, () => {
+        console.log(`App listening on the port ${PORT}`);
+      });
+    });
+    mongoose.connection.on("error", error => {
+      console.log(`Mongoose error: ${error.message}`)
     });
   }
 }
