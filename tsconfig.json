@@ -5,6 +5,8 @@
         "module": "CommonJS",
         "moduleResolution": "node",
         "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "strictPropertyInitialization": false,
         "target": "ESNext",
         "outDir": "./dist",
         "baseUrl": "./src",
