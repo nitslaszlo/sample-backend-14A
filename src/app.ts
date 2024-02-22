@@ -3,6 +3,7 @@ import IController from "./interfaces/controller.interface";
 import { config } from "dotenv";
 import mongoose from "mongoose";
 import errorMiddleware from "./middleware/error.middleware";
+import cookieParser from "cookie-parser";
 
 export default class App {
   public app: express.Application;
@@ -25,6 +26,7 @@ export default class App {
   private initializeMiddlewares() {
     this.app.use(express.json());
     this.app.use(this.loggerMiddleware);
+    this.app.use(cookieParser())
   }
 
   private initializeErrorHandling() {

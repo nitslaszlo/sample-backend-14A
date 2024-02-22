@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "sourceMap": true,
-        "strict": true,
+        "alwaysStrict": true,
         "module": "CommonJS",
         "moduleResolution": "node",
         "esModuleInterop": true,

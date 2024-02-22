@@ -1,5 +1,5 @@
 
-export default interface Post {
+export default interface IPost {
     author: string;
     content: string;
     title: string;
