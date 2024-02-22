@@ -1,3 +1,5 @@
+import { Schema } from "mongoose";
+
 export default interface IUser {
   // _id: string;
   // firstName: string;
@@ -9,7 +11,7 @@ export default interface IUser {
   //   street: string;
   //   city: string;
   // };
-  _id: string;
+  _id?: Schema.Types.ObjectId,
   name: string;
   email: string;
   password: string | undefined;

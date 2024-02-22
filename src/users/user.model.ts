@@ -1,9 +1,11 @@
-import { Document, Schema, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import IUser from "./user.interface";
 
-const userSchema = new Schema<IUser & Document>(
+// If you have declared _id field explicitly in schema, you must initialize it explicitly
+// If you have not declared it in schema, MongoDB will declare and initialize it
+
+const userSchema = new Schema<IUser>(
   {
-    id: String,
     name: String,
     email: String,
     password: String,
@@ -11,6 +13,6 @@ const userSchema = new Schema<IUser & Document>(
   { versionKey: false }
 );
 
-const userModel = model<IUser & Document>("User", userSchema);
+const userModel = model<IUser>("User", userSchema);
 
 export default userModel;

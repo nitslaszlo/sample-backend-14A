@@ -1,12 +1,20 @@
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsOptional, IsString, IsMongoId } from "class-validator";
 import CreateAddressDto from "./address.dto";
+import { Schema } from "mongoose";
 
 export default class CreateUserDto {
-  @IsString()
-  public firstName: string;
+  // @IsString()
+  // public firstName: string;
+
+  // @IsString()
+  // public lastName: string;
+
+  @IsMongoId()
+  @IsOptional()
+  public _id: Schema.Types.ObjectId;
 
   @IsString()
-  public lastName: string;
+  public name: string;
 
   @IsString()
   public email: string;
@@ -14,7 +22,7 @@ export default class CreateUserDto {
   @IsString()
   public password: string;
 
-  @IsOptional()
-  @ValidateNested()
-  public address?: CreateAddressDto;
+  // @IsOptional()
+  // @ValidateNested()
+  // public address?: CreateAddressDto;
 }
