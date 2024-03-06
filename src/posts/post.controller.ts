@@ -18,10 +18,10 @@ export default class PostsController implements Controller {
 
   private initializeRoutes() {
     this.router.get(this.path, authMiddleware, this.getAllPosts);
-    this.router.get(`${this.path}/:id`, this.getPostById);
-    this.router.patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true),  this.modifyPost);
-    this.router.delete(`${this.path}/:id`, this.deletePost);
-    this.router.post(this.path, validationMiddleware(CreatePostDto), this.createPost);
+    this.router.get(`${this.path}/:id`, authMiddleware, this.getPostById);
+    this.router.patch(`${this.path}/:id`, [authMiddleware, validationMiddleware(CreatePostDto, true)],  this.modifyPost);
+    this.router.delete(`${this.path}/:id`, authMiddleware, this.deletePost);
+    this.router.post(this.path, [authMiddleware, validationMiddleware(CreatePostDto)], this.createPost);
   }
 
   private getAllPosts = (

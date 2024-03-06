@@ -2,12 +2,12 @@ import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 import AuthenticationTokenMissingException from "../exceptions/AuthenticationTokenMissingException";
 import WrongAuthenticationTokenException from "../exceptions/WrongAuthenticationTokenException";
-import DataStoredInToken from "../interfaces/dataStoredInToken";
-import RequestWithUser from "../interfaces/requestWithUser.interface";
+import IDataStoredInToken from "../interfaces/dataStoredInToken";
+import IRequestWithUser from "../interfaces/requestWithUser.interface";
 import userModel from "../users/user.model";
 
 export default async function authMiddleware(
-  request: RequestWithUser,
+  request: IRequestWithUser,
   response: Response,
   next: NextFunction
 ): Promise<void> {
@@ -18,7 +18,7 @@ export default async function authMiddleware(
       const verificationResponse = jwt.verify(
         cookies.Authorization,
         secret
-      ) as DataStoredInToken;
+      ) as IDataStoredInToken;
       const id = verificationResponse._id;
       const user = await userModel.findById(id);
       if (user) {
