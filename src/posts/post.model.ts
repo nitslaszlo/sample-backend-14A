@@ -2,9 +2,16 @@ import mongoose from "mongoose";
 import IPost from "./post.interface";
 
 const postSchema = new mongoose.Schema<IPost>({
-  author: String,
+  authorId: {
+    ref: 'User',
+    type: mongoose.Schema.Types.ObjectId,
+  },
   content: String,
-  title: String,
+  title: {
+    type: String,
+    MaxLength: 60,
+    MinLength: 10
+  },
 },
 {versionKey: false});
 

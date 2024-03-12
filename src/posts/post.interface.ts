@@ -1,6 +1,6 @@
-
+import { Schema } from "mongoose";
 export default interface IPost {
-    author: string;
-    content: string;
-    title: string;
-  }
+  authorId?: Schema.Types.ObjectId;
+  content: string;
+  title: string;
+}

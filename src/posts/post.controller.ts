@@ -6,6 +6,7 @@ import PostNotFoundException from "../exceptions/PostNotFoundException";
 import validationMiddleware from "../middleware/validation.middleware";
 import CreatePostDto from "./post.dto";
 import authMiddleware from "../middleware/auth.middleware";
+import IRequestWithUser from "interfaces/requestWithUser.interface";
 
 export default class PostsController implements Controller {
   public path = "/posts";
@@ -29,7 +30,7 @@ export default class PostsController implements Controller {
     response: Response
   ) => {
     this.post
-      .find()
+      .find().populate("authorId", ["-password", "-email"])
       .then((posts) => {
         response.send(posts);
       })
@@ -81,11 +82,14 @@ export default class PostsController implements Controller {
   };
 
   private createPost = (
-    request: Request,
+    request: IRequestWithUser,
     response: Response
   ) => {
     const postData: Post = request.body;
-    const createdPost = new this.post(postData);
+    const createdPost = new this.post({
+      ...postData,
+      authorId: request.user._id
+    });
     createdPost
       .save()
       .then((savedPost) => {
