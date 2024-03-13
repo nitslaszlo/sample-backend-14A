@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction, Router} from "express";
+import { Request, Response, NextFunction, Router } from "express";
 import Controller from "../interfaces/controller.interface";
 import Post from "./post.interface";
 import postModel from "./post.model";
@@ -20,17 +20,23 @@ export default class PostsController implements Controller {
   private initializeRoutes() {
     this.router.get(this.path, authMiddleware, this.getAllPosts);
     this.router.get(`${this.path}/:id`, authMiddleware, this.getPostById);
-    this.router.patch(`${this.path}/:id`, [authMiddleware, validationMiddleware(CreatePostDto, true)],  this.modifyPost);
+    this.router.patch(
+      `${this.path}/:id`,
+      [authMiddleware, validationMiddleware(CreatePostDto, true)],
+      this.modifyPost
+    );
     this.router.delete(`${this.path}/:id`, authMiddleware, this.deletePost);
-    this.router.post(this.path, [authMiddleware, validationMiddleware(CreatePostDto)], this.createPost);
+    this.router.post(
+      this.path,
+      [authMiddleware, validationMiddleware(CreatePostDto)],
+      this.createPost
+    );
   }
 
-  private getAllPosts = (
-    request: Request,
-    response: Response
-  ) => {
+  private getAllPosts = (request: Request, response: Response) => {
     this.post
-      .find().populate("authorId", ["-password", "-email"])
+      .find()
+      .populate("authorId", ["-password", "-email"])
       .then((posts) => {
         response.send(posts);
       })
@@ -81,23 +87,18 @@ export default class PostsController implements Controller {
       });
   };
 
-  private createPost = (
+  private createPost = async (
     request: IRequestWithUser,
     response: Response
   ) => {
     const postData: Post = request.body;
     const createdPost = new this.post({
       ...postData,
-      authorId: request.user._id
+      authorId: request.user._id,
     });
-    createdPost
-      .save()
-      .then((savedPost) => {
-        response.send(savedPost);
-      })
-      .catch((error) => {
-        response.send(error.message);
-      });
+    const savedPost = await createdPost.save();
+    await savedPost.populate("authorId", ["-password", "-email"]);
+    response.send(savedPost);
   };
 
   private deletePost = (
